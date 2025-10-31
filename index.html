@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="fa">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>هدیه</title>
+<style>
+  :root{
+    --size:min(720px,96vw);
+    --gap:8px;
+    --bg:#07101a;
+    --card:#0b0f14;
+    --accent:#ff6b9a;
+    --circle-size: min(720px,72vw);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(180deg,#041017,var(--bg));
+    color:#fff;
+    font-family:"Vazirmatn",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    direction:rtl;
+    padding:18px;
+  }
+
+  .wrap{width:var(--size);max-width:880px}
+  .title{
+    text-align:center;
+    font-weight:900;
+    font-size:20px;
+    margin-bottom:12px;
+  }
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.35));
+    padding:14px;
+    border-radius:16px;
+    box-shadow:0 14px 50px rgba(0,0,0,0.6);
+  }
+
+  /* wrapper that will become circular and spin (only this will spin) */
+  .grid-wrap{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .5s ease;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:var(--gap);
+    width:100%;
+    max-width:720px;
+    height:min(72vw,720px);
+    margin:0 auto;
+    direction:ltr; /* ensure left-to-right visual order */
+    border-radius:12px;
+    overflow:visible;
+    transition:all .5s ease;
+  }
+
+  /* when wrapper becomes disk, apply circle mask and overflow hidden */
+  .grid-wrap.disk{
+    border-radius:50%;
+    overflow:hidden;
+    width:var(--circle-size);
+    height:var(--circle-size);
+    transition:all .5s ease;
+  }
+  /* make the internal grid fill the circular wrapper when disk is active */
+  .grid-wrap.disk .grid{
+    width:100%;
+    height:100%;
+    max-width:none;
+    border-radius:0;
+  }
+
+  .tile{
+    border-radius:12px;
+    overflow:hidden;
+    background:rgba(255,255,255,0.02);
+    border:1px solid rgba(255,255,255,0.03);
+  }
+
+  .tile img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transform:translateY(18px) scale(1.06);
+    opacity:0;
+    transition:all .6s cubic-bezier(.2,.9,.3,1);
+    will-change:transform,opacity;
+  }
+
+  .controls{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    margin-top:12px;
+  }
+
+  .btn{
+    width:56px;
+    height:56px;
+    border-radius:999px;
+    border:0;
+    background:linear-gradient(90deg,var(--accent),#ffb3cf);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    cursor:pointer;
+    box-shadow:0 10px 28px rgba(255,107,154,0.12);
+    color:#111;
+  }
+
+  .code-panel{
+    margin-top:14px;
+    background:rgba(0,0,0,0.55);
+    padding:12px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.03);
+    color:#ffdfe9;
+    font-family:monospace;
+    font-size:14px;
+    line-height:1.6;
+    display:none;
+    white-space:pre-wrap;
+  }
+  .code-panel.open{ display:block; }
+
+  .spin-animation{
+    animation:spin 6s linear infinite;
+    transform-origin:center;
+  }
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+  /* ensure controls and title never rotate */
+  .controls, .title { position:relative; z-index:10; }
+
+  @media (max-width:480px){
+    .btn{width:50px;height:50px;font-size:20px}
+    .title{font-size:18px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">روزت مبارک قشنگترین دختر زندگی من🥹♥️</div>
+
+    <div class="card">
+      <div id="gridWrap" class="grid-wrap">
+        <div id="grid" class="grid" aria-hidden="false">
+          <!-- left column = img1,img4,img7 ; center = img2,img5,img8 ; right = img3,img6,img9 -->
+          <div class="tile"><img src="img1.jpg" alt="تصویر ۱" loading="lazy"></div>
+          <div class="tile"><img src="img2.jpg" alt="تصویر ۲" loading="lazy"></div>
+          <div class="tile"><img src="img3.jpg" alt="تصویر ۳" loading="lazy"></div>
+
+          <div class="tile"><img src="img4.jpg" alt="تصویر ۴" loading="lazy"></div>
+          <div class="tile"><img src="img5.jpg" alt="تصویر ۵" loading="lazy"></div>
+          <div class="tile"><img src="img6.jpg" alt="تصویر ۶" loading="lazy"></div>
+
+          <div class="tile"><img src="img7.jpg" alt="تصویر ۷" loading="lazy"></div>
+          <div class="tile"><img src="img8.jpg" alt="تصویر ۸" loading="lazy"></div>
+          <div class="tile"><img src="img9.jpg" alt="تصویر ۹" loading="lazy"></div>
+        </div>
+      </div>
+
+      <div class="controls" role="group" aria-label="controls">
+        <button id="playStop" class="btn" title="پخش / توقف" aria-pressed="false" aria-label="پخش یا توقف موزیک">▶️</button>
+        <button id="toggleCodes" class="btn" title="نمایش کدها" aria-label="نمایش یا مخفی‌سازی کدها">🔐</button>
+      </div>
+
+      <div id="codePanel" class="code-panel" aria-hidden="true">
+11011000 10101010 = ت ✨
+11011001 10001000 = و ✨
+11011001 10000101 = م ✨
+11011000 10101011 = ث ✨
+11011001 10000100 = ل ✨
+11011001 10010000 = ِ ✨
+11011001 10000110 = ن ✨
+11011001 10001000 = و ✨
+11011000 10110001 = ر ✨
+11011001 10000111 = ه ✨
+11011000 10110011 = س ✨
+11011000 10101010 = ت ✨
+11011011 10001100 = ی ✨
+
+1 = — ✨
+7777 = S ✨
+44 = h ✨
+444 = i ✨
+66 = n ✨
+33 = e ✨
+666 = o ✨
+66 = n ✨
+1 = , ✨
+22 = b ✨
+777 = r ✨
+2 = a ✨
+888 = v ✨
+33 = e ✨
+44 = h ✨
+33 = e ✨
+2 = a ✨
+777 = r ✨
+8 = t ✨
+
+11011000 10101010
+11011001 10001000
+11011001 10000101
+11011000 10101011
+11011001 10000100
+11011001 10010000
+11011001 10000110
+11011001 10001000
+11011000 10110001
+11011001 10000111
+11011000 10110011
+11011000 10101010
+11011011 10001100
+1
+7777
+44
+444
+66
+33
+666
+66
+1
+22
+777
+2
+888
+33
+44
+33
+2
+777
+8
+
+تو مثل نور هستی، shine on, brave heart. 🎉💖
+      </div>
+    </div>
+  </div>
+
+  <audio id="bg" preload="auto" playsinline>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+<script>
+  const playStop = document.getElementById('playStop');
+  const toggleCodes = document.getElementById('toggleCodes');
+  const codePanel = document.getElementById('codePanel');
+  const bg = document.getElementById('bg');
+  const grid = document.getElementById('grid');
+  const gridWrap = document.getElementById('gridWrap');
+  let playing = false;
+  let revealed = false;
+
+  // reveal images (show without resetting)
+  function revealImages(){
+    const imgs = document.querySelectorAll('.tile img');
+    imgs.forEach((img, idx)=>{
+      setTimeout(()=>{ img.style.opacity = '1'; img.style.transform = 'none'; }, idx * 90);
+    });
+    revealed = true;
+  }
+
+  // keyboard accessibility for play button
+  playStop.addEventListener('keydown', (e)=>{
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      playStop.click();
+    }
+  });
+
+  // toggle play/pause (pause preserves currentTime; resume continues)
+  playStop.addEventListener('click', async ()=>{
+    if (!playing){
+      if (!revealed) revealImages();
+      try{
+        await bg.play();
+      }catch(e){
+        // if play blocked, show native controls so user can manually start
+        bg.controls = true;
+        bg.style.display = 'block';
+      }
+      // make wrapper circular and start spinning animation (spin the wrapper, not inner grid)
+      gridWrap.classList.add('disk');
+      gridWrap.classList.add('spin-animation');
+      playStop.textContent = '⏸️';
+      playStop.setAttribute('aria-pressed','true');
+      playing = true;
+    } else {
+      // pause but do not reset currentTime; stop spinning but keep disk shape
+      bg.pause();
+      gridWrap.classList.remove('spin-animation');
+      playStop.textContent = '▶️';
+      playStop.setAttribute('aria-pressed','false');
+      playing = false;
+    }
+  });
+
+  toggleCodes.addEventListener('click', ()=>{
+    const open = codePanel.classList.toggle('open');
+    codePanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    if(open){
+      codePanel.focus?.();
+    }
+  });
+
+  // when audio ends, stop spinning and set button to play and remove disk state (back to grid)
+  bg.addEventListener('ended', ()=>{
+    gridWrap.classList.remove('spin-animation');
+    gridWrap.classList.remove('disk'); // only remove disk when track actually ends
+    playStop.textContent = '▶️';
+    playStop.setAttribute('aria-pressed','false');
+    playing = false;
+  });
+
+  // ensure grid visual order LTR so left/middle/right map to img1/img2/img3
+  grid.style.direction = 'ltr';
+</script>
+</body>
+</html>
